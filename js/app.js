@@ -71,20 +71,24 @@ function addToPTS(id,bairro){
 
 /* ---------- views ---------- */
 const V={};
-V.inicio=()=>`<h2>Conheça o território e amplie as possibilidades de cuidado</h2>
+V.inicio=()=>{const nC=D.unidades.filter(u=>u.tipo==="CRAS").length,nE=D.unidades.filter(u=>u.tipo==="CREAS").length;
+return `<section class="hero"><span class="eyebrow">Apoio matricial e territorial</span><h1>Conheça o território e amplie as possibilidades de cuidado</h1>
+<p class="lead">Encontre CRAS, CREAS, centros de convivência e a unidade de saúde de referência do usuário, e use a rede do território para construir o Projeto Terapêutico Singular.</p>
+<div class="cta"><button class="primary lg" data-go="localizar">Localizar um território</button><button class="ghost lg" data-go="mapa">Abrir o mapa</button></div></section>
+<div class="stats"><div class="stat"><b>${D.bairros.length}</b><span>bairros</span></div><div class="stat"><b>${nC}</b><span>CRAS</span></div><div class="stat"><b>${nE}</b><span>CREAS</span></div><div class="stat"><b>${D.centros.length}</b><span>centros de convivência</span></div></div>
 <div class="grid">
-<div class="card"><h3>1. Localizar</h3>Informe o bairro ou o endereço de um usuário (fictício no protótipo) e veja CRAS, CREAS, centros de convivência e unidade de saúde de referência.</div>
-<div class="card"><h3>2. Mapa</h3>Visualize num único mapa as unidades de saúde e os dispositivos comunitários do território.</div>
-<div class="card"><h3>3. PTS</h3>Monte o Projeto Terapêutico Singular escolhendo recursos do território. A ferramenta apoia a reflexão da equipe e <b>não prescreve condutas</b>.</div>
-<div class="card"><h3>4. Apoio matricial</h3>Registre articulações entre Saúde da Família, eMulti, CAPS, Assistência Social e dispositivos comunitários.</div></div>
-<div class="card"><b>Base de dados:</b> ${D.bairros.length} bairros, ${D.unidades.filter(u=>u.tipo==="CRAS").length} CRAS, ${D.unidades.filter(u=>u.tipo==="CREAS").length} CREAS e ${D.centros.length} centros de convivência (Base Territorial/SEMCASPI, março/2020, e listas da SEMCASPI).
-<br>${S.ubs?`<span class="tag">UBS importadas: ${S.ubs.pts.length} pontos, ${S.ubs.polys.length} áreas</span>`:`<span class="warn">Unidades de saúde ainda não carregadas. Importe o KML do mapa da rede de saúde em <b>Dados</b>.</span>`}</div>`;
+<div class="card step"><div class="num">1</div><h3>Localizar</h3><p>Informe o bairro ou o endereço de um usuário (fictício no protótipo) e veja CRAS, CREAS, centros de convivência e unidade de saúde de referência.</p><button class="link" data-go="localizar">Localizar →</button></div>
+<div class="card step"><div class="num">2</div><h3>Mapa</h3><p>Visualize num único mapa as unidades de saúde e os dispositivos comunitários do território.</p><button class="link" data-go="mapa">Abrir o mapa →</button></div>
+<div class="card step"><div class="num">3</div><h3>PTS</h3><p>Monte o Projeto Terapêutico Singular escolhendo recursos do território. A ferramenta apoia a reflexão da equipe e <b>não prescreve condutas</b>.</p><button class="link" data-go="pts">Montar um PTS →</button></div>
+<div class="card step"><div class="num">4</div><h3>Apoio matricial</h3><p>Registre articulações entre Saúde da Família, eMulti, CAPS, Assistência Social e dispositivos comunitários.</p><button class="link" data-go="matricial">Registrar →</button></div></div>
+<div class="note"><b>Base de dados:</b> Base Territorial/SEMCASPI (março/2020) e listas da SEMCASPI.
+${S.ubs?`<br><span class="tag t-ubs">UBS importadas: ${S.ubs.pts.length} pontos, ${S.ubs.polys.length} áreas</span>`:`<div class="warn">Unidades de saúde ainda não carregadas. Importe o KML do mapa da rede de saúde em <b>Dados</b>.</div>`}</div>`};
 
-V.localizar=()=>`<h2>Localizar o território do usuário</h2>
-<div class="card"><label>Bairro</label><div class="row"><input id="qb" list="lb" placeholder="Digite o bairro"><button class="primary" id="gb">Buscar bairro</button></div>
+V.localizar=()=>`<h2>Localizar o território do usuário</h2><p class="sub">Busque pelo bairro ou por um endereço para ver os serviços de referência.</p>
+<div class="card"><div class="cols"><div><label for="qb">Por bairro</label><div class="inline"><input id="qb" list="lb" placeholder="Digite o bairro"><button class="primary" id="gb">Buscar</button></div></div>
+<div><label for="qe">Por endereço (rua, número, bairro)</label><div class="inline"><input id="qe" placeholder="Ex.: Rua Salitre, 7286, Cidade Jardim"><button class="primary" id="ge">Buscar</button></div></div></div>
 <datalist id="lb">${D.bairros.map(b=>`<option value="${esc(b.nome)}">`).join("")}</datalist>
-<label>ou endereço (rua, número, bairro)</label><div class="row"><input id="qe" placeholder="Ex.: Rua Salitre, 7286, Cidade Jardim"><button class="primary" id="ge">Buscar endereço</button></div>
-<p class="muted">A busca por endereço usa o OpenStreetMap e precisa de internet. Use endereços fictícios ou aproximados.</p></div><div id="res"></div>`;
+<p class="muted" style="margin-bottom:0">A busca por endereço usa o OpenStreetMap e precisa de internet. Use endereços fictícios ou aproximados.</p></div><div id="res"></div>`;
 V.localizar.bind=()=>{
   $("#gb").onclick=()=>{const b=findBairro($("#qb").value);if(!b)return $("#res").innerHTML=`<div class="warn">Bairro não encontrado na base.</div>`;mostra(b)};
   $("#ge").onclick=async()=>{const q=$("#qe").value.trim();if(!q)return;$("#res").innerHTML=`<p>Buscando…</p>`;
@@ -92,7 +96,8 @@ V.localizar.bind=()=>{
       const a=r.addr||{},cand=[a.suburb,a.neighbourhood,a.city_district,a.quarter,a.residential].filter(Boolean);let b=null;for(const c of cand){b=findBairro(c);if(b)break}
       mostra(b,r,cand)}catch(e){$("#res").innerHTML=`<div class="warn">Falha na busca (${esc(e.message)}). Verifique a internet.</div>`}};
 };
-function lista(title,arr,bairro){return arr.length?`<h3>${title}</h3>`+arr.map(d=>`<div class="dev"><div class="t"><b>${esc(d.nome)}</b> <span class="tag">${esc(d.tipo)}</span><br><span class="muted">${esc(d.end)}${d.tel?" · "+esc(d.tel):""}${d.info?"<br>"+esc(d.info):""}</span></div><button class="ghost noprint" data-add="${esc(d.id)}">+ PTS</button></div>`).join(""):""}
+const tcls=t=>({CRAS:"t-cras",CREAS:"t-creas","Centro de Convivência":"t-cc"}[t]||"");
+function lista(title,arr,bairro){return arr.length?`<h3 class="sec">${title} <small>${arr.length}</small></h3>`+arr.map(d=>`<div class="dev"><div class="t"><b>${esc(d.nome)}</b> <span class="tag ${tcls(d.tipo)}">${esc(d.tipo)}</span><span class="muted">${esc(d.end)}${d.tel?" · "+esc(d.tel):""}</span>${d.info?`<span class="muted">${esc(d.info)}</span>`:""}</div><button class="ghost noprint" data-add="${esc(d.id)}">+ PTS</button></div>`).join(""):""}
 function mostra(b,r,cand){
   let h="";
   if(!b)h+=`<div class="warn">${r?`Localizado no mapa, mas não consegui identificar o bairro automaticamente${cand&&cand.length?` (OSM indicou: ${esc(cand.join(", "))})`:""}. Escolha o bairro na caixa acima.`:"Bairro não encontrado."}</div>`;
@@ -100,19 +105,19 @@ function mostra(b,r,cand){
   if(r){const u=ubsPara(r.lat,r.lng);ubsTxt=u?(u.oficial?`<b>${esc(u.nome)}</b> <span class="tag">área de abrangência</span>`:`<b>${esc(u.nome)}</b> <span class="tag">mais próxima (${u.km.toFixed(1)} km), não é área oficial</span>`):`<span class="muted">Importe o KML das UBS em Dados para identificar a unidade de referência.</span>`}
   else if(b){const l=ubsPorBairro(b);ubsTxt=l.length?l.map(u=>`<b>${esc(u.nome)}</b>`).join(", ")+` <span class="tag">possível, confirmar</span>`:`<span class="muted">Informe o endereço (ou importe o KML das UBS) para identificar a unidade de referência.</span>`}
   if(b){const t=territorio(b);
-    h+=`<div class="card"><h2>${esc(b.nome)}</h2><span class="tag">${esc(b.regional||"regional n/d")}</span>${b.cras.map(c=>`<span class="tag">CRAS ${esc(c)}</span>`).join("")}
-    <p class="muted">População (Censo 2010): ${b.populacao.toLocaleString("pt-BR")} · Famílias no CadÚnico: ${b.familias.toLocaleString("pt-BR")}</p>
-    <div class="card"><b>Unidade de saúde de referência:</b> ${ubsTxt}</div>
+    h+=`<div class="card"><div class="res-head"><div><h2>${esc(b.nome)}</h2><span class="tag">${esc(b.regional||"regional n/d")}</span>${b.cras.map(c=>`<span class="tag t-cras">CRAS ${esc(c)}</span>`).join("")}</div>
+    <div class="kpis"><div><b>${b.populacao.toLocaleString("pt-BR")}</b><span>habitantes (Censo 2010)</span></div><div><b>${b.familias.toLocaleString("pt-BR")}</b><span>famílias no CadÚnico</span></div></div></div>
+    <div class="ubs"><span class="k">Unidade de saúde de referência</span>${ubsTxt}</div>
     ${lista("CRAS de referência",t.cras)}${lista("CREAS da região",t.creas)}${lista("Centros de convivência (SCFV) do CRAS",t.centros)}
     ${t.centros.length?"":`<p class="muted">Nenhum centro de convivência cadastrado para o CRAS deste bairro na lista atual.</p>`}
-    ${b.localidades.length?`<h3>Localidades e habitações populares (${b.localidades.length})</h3><p class="muted">${b.localidades.map(l=>esc(l.nome)).join(" · ")}</p>`:""}</div>`;
+    ${b.localidades.length?`<h3 class="sec">Localidades e habitações populares <small>${b.localidades.length}</small></h3><div class="chips">${b.localidades.map(l=>`<span>${esc(l.nome)}</span>`).join("")}</div>`:""}</div>`;
     $("#res").dataset.b=b.nome;
   } else if(r) h+=`<div class="card">${ubsTxt}</div>`;
   $("#res").innerHTML=h;
   $$("[data-add]").forEach(x=>x.onclick=()=>addToPTS(x.dataset.add,b&&b.nome));
 }
 
-V.mapa=()=>`<h2>Mapa do território</h2><div class="card noprint"><div class="row"><label style="margin:0"><input type="checkbox" class="ly" value="CRAS" checked style="width:auto"> CRAS</label><label style="margin:0"><input type="checkbox" class="ly" value="CREAS" checked style="width:auto"> CREAS</label><label style="margin:0"><input type="checkbox" class="ly" value="Centro de Convivência" checked style="width:auto"> Centros de convivência</label><label style="margin:0"><input type="checkbox" class="ly" value="UBS" checked style="width:auto"> UBS</label></div><p class="muted" id="st">Posicionando unidades pelo endereço (OpenStreetMap)…</p></div><div id="map"></div>`;
+V.mapa=()=>`<h2>Mapa do território</h2><p class="sub">Unidades de saúde e dispositivos comunitários de Teresina.</p><div class="card noprint"><div class="layers">${[["CRAS","CRAS","t-cras"],["CREAS","CREAS","t-creas"],["Centro de Convivência","Centros de convivência","t-cc"],["UBS","UBS","t-ubs"]].map(([v,n,c])=>`<label class="chk"><input type="checkbox" class="ly" value="${v}" checked> <span class="tag ${c}">${n}</span></label>`).join("")}</div><p class="muted" id="st" style="margin-bottom:0">Posicionando unidades pelo endereço (OpenStreetMap)…</p></div><div id="map"></div>`;
 V.mapa.bind=async()=>{
   map=L.map("map").setView([-5.0892,-42.8019],12);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
@@ -131,19 +136,19 @@ V.mapa.bind=async()=>{
 };
 
 V.pts=()=>{const c=curCase();
-  return `<h2>Projeto Terapêutico Singular (PTS)</h2><div class="card noprint"><div class="row"><button class="primary" id="np">+ Novo caso (fictício)</button></div><div style="margin-top:.5rem">${S.pts.map(x=>`<span class="tag" style="cursor:pointer;${x.id===S.cur?"background:var(--az);color:#fff":""}" data-open="${x.id}">${esc(x.codigo||"sem código")}</span>`).join("")||`<span class="muted">Nenhum caso ainda.</span>`}</div></div>${c?editor(c):""}`};
+  return `<h2>Projeto Terapêutico Singular (PTS)</h2><p class="sub">Monte o PTS escolhendo os recursos do território do usuário.</p><div class="card noprint"><button class="primary" id="np">+ Novo caso (fictício)</button><div class="cases">${S.pts.map(x=>`<button class="case${x.id===S.cur?" on":""}" data-open="${x.id}">${esc(x.codigo||"sem código")}</button>`).join("")||`<span class="muted">Nenhum caso ainda.</span>`}</div></div>${c?editor(c):""}`};
 function editor(c){
   const b=findBairro(c.bairro),t=b?territorio(b):{cras:[],creas:[],centros:[]},terr=[...t.cras,...t.creas,...t.centros],outros=devices().filter(d=>!terr.find(x=>x.id===d.id));
-  const chk=d=>`<label style="font-weight:400;margin:.2rem 0"><input type="checkbox" style="width:auto" data-dev="${esc(d.id)}" ${c.devs.includes(d.id)?"checked":""}> ${esc(d.nome)} <span class="tag">${esc(d.tipo)}</span></label>`;
-  return `<div class="card"><label>Código ou apelido fictício (não use nome real)</label><input data-f="codigo" value="${esc(c.codigo)}">
-  <label>Bairro de residência</label><input data-f="bairro" list="lb2" value="${esc(c.bairro)}"><datalist id="lb2">${D.bairros.map(x=>`<option value="${esc(x.nome)}">`).join("")}</datalist>
-  <label>Situação / demanda</label><textarea rows="3" data-f="demanda">${esc(c.demanda)}</textarea>
-  <label>Objetivos do cuidado</label><textarea rows="3" data-f="objetivos">${esc(c.objetivos)}</textarea>
-  <h3>Recursos do território ${b?`(${esc(b.nome)})`:""}</h3>${terr.length?terr.map(chk).join(""):`<span class="muted">Informe um bairro válido para ver os recursos.</span>`}
-  <details class="noprint"><summary>Outros dispositivos da cidade</summary>${outros.map(chk).join("")}</details>
-  <h3>Ações combinadas</h3><table><tr><th>Ação</th><th>Responsável</th><th>Prazo</th><th class="noprint"></th></tr>${c.acoes.map((a,i)=>`<tr><td><input data-a="${i}:acao" value="${esc(a.acao)}"></td><td><input data-a="${i}:resp" value="${esc(a.resp)}"></td><td><input data-a="${i}:prazo" value="${esc(a.prazo)}"></td><td class="noprint"><button class="danger" data-ra="${i}">×</button></td></tr>`).join("")}</table><button class="ghost noprint" id="aa">+ Ação</button>
-  <label>Observações</label><textarea rows="3" data-f="obs">${esc(c.obs)}</textarea>
-  <div class="row noprint" style="margin-top:.8rem"><button class="primary" id="pr">Imprimir / salvar PDF</button><button class="danger" id="dl">Excluir caso</button></div>
+  const chk=d=>`<label class="chk"><input type="checkbox" data-dev="${esc(d.id)}" ${c.devs.includes(d.id)?"checked":""}> <span class="nm">${esc(d.nome)}</span><span class="tag ${tcls(d.tipo)}">${esc(d.tipo)}</span></label>`;
+  return `<div class="card"><div class="cols"><div><label for="f-cod">Código ou apelido fictício (não use nome real)</label><input id="f-cod" data-f="codigo" value="${esc(c.codigo)}"></div>
+  <div><label for="f-bai">Bairro de residência</label><input id="f-bai" data-f="bairro" list="lb2" value="${esc(c.bairro)}"><datalist id="lb2">${D.bairros.map(x=>`<option value="${esc(x.nome)}">`).join("")}</datalist></div></div>
+  <label for="f-dem">Situação / demanda</label><textarea id="f-dem" rows="3" data-f="demanda">${esc(c.demanda)}</textarea>
+  <label for="f-obj">Objetivos do cuidado</label><textarea id="f-obj" rows="3" data-f="objetivos">${esc(c.objetivos)}</textarea>
+  <h3 class="sec">Recursos do território ${b?`<small>${esc(b.nome)}</small>`:""}</h3>${terr.length?`<div class="chks">${terr.map(chk).join("")}</div>`:`<p class="muted">Informe um bairro válido para ver os recursos.</p>`}
+  <details class="noprint"><summary>Outros dispositivos da cidade</summary><div class="chks">${outros.map(chk).join("")}</div></details>
+  <h3 class="sec">Ações combinadas</h3><div class="tbl"><table><tr><th>Ação</th><th>Responsável</th><th>Prazo</th><th class="noprint"></th></tr>${c.acoes.map((a,i)=>`<tr><td><input data-a="${i}:acao" value="${esc(a.acao)}" aria-label="Ação"></td><td><input data-a="${i}:resp" value="${esc(a.resp)}" aria-label="Responsável"></td><td><input data-a="${i}:prazo" value="${esc(a.prazo)}" aria-label="Prazo"></td><td class="noprint"><button class="danger" data-ra="${i}" aria-label="Remover ação">×</button></td></tr>`).join("")}</table></div><button class="ghost noprint" id="aa">+ Ação</button>
+  <label for="f-obs">Observações</label><textarea id="f-obs" rows="3" data-f="obs">${esc(c.obs)}</textarea>
+  <div class="row noprint" style="margin-top:1.2rem;justify-content:flex-start"><button class="primary" id="pr" style="flex:0 0 auto">Imprimir / salvar PDF</button><button class="danger" id="dl" style="flex:0 0 auto">Excluir caso</button></div>
   <p class="muted">Ferramenta de apoio à reflexão da equipe. Não substitui o julgamento clínico nem prescreve condutas.</p></div>`}
 V.pts.bind=()=>{
   $("#np").onclick=()=>{const c={id:uid(),codigo:"Caso "+(S.pts.length+1),bairro:"",demanda:"",objetivos:"",devs:[],acoes:[],obs:"",criado:new Date().toISOString()};S.pts.unshift(c);S.cur=c.id;store.set("pts",S.pts);store.set("cur",c.id);go("pts")};
@@ -160,12 +165,13 @@ V.pts.bind=()=>{
 };
 
 const EQ=["Saúde da Família (ESF)","eMulti","CAPS","Assistência Social (CRAS/CREAS)","Dispositivo comunitário","Outro"];
-V.matricial=()=>`<h2>Apoio matricial</h2><div class="card noprint"><div class="row"><div><label>Data</label><input type="date" id="md" value="${new Date().toISOString().slice(0,10)}"></div><div><label>Caso do PTS</label><select id="mc"><option value="">—</option>${S.pts.map(c=>`<option>${esc(c.codigo)}</option>`).join("")}</select></div></div>
-<label>Equipes e serviços envolvidos</label>${EQ.map(e=>`<label style="font-weight:400;display:inline-block;margin-right:1rem"><input type="checkbox" class="eq" style="width:auto" value="${esc(e)}"> ${esc(e)}</label>`).join("")}
-<label>Combinado / encaminhamento</label><textarea id="me" rows="3"></textarea>
-<label>Situação</label><select id="ms"><option>Em andamento</option><option>Concluído</option><option>Aguardando retorno</option></select>
-<p><button class="primary" id="msv">Registrar</button></p></div>
-<div class="card"><table><tr><th>Data</th><th>Caso</th><th>Envolvidos</th><th>Combinado</th><th>Situação</th><th></th></tr>${S.mat.map(m=>`<tr><td>${esc(m.data)}</td><td>${esc(m.caso)}</td><td>${esc(m.eq.join(", "))}</td><td>${esc(m.enc)}</td><td>${esc(m.st)}</td><td><button class="danger noprint" data-dm="${m.id}">×</button></td></tr>`).join("")||`<tr><td colspan="6" class="muted">Sem registros.</td></tr>`}</table></div>`;
+V.matricial=()=>`<h2>Apoio matricial</h2><p class="sub">Registre as articulações entre equipes e serviços e acompanhe o que foi combinado.</p>
+<div class="card noprint"><div class="cols"><div><label for="md">Data</label><input type="date" id="md" value="${new Date().toISOString().slice(0,10)}"></div><div><label for="mc">Caso do PTS</label><select id="mc"><option value="">—</option>${S.pts.map(c=>`<option>${esc(c.codigo)}</option>`).join("")}</select></div></div>
+<label>Equipes e serviços envolvidos</label><div class="chks">${EQ.map(e=>`<label class="chk"><input type="checkbox" class="eq" value="${esc(e)}"> ${esc(e)}</label>`).join("")}</div>
+<label for="me">Combinado / encaminhamento</label><textarea id="me" rows="3"></textarea>
+<label for="ms">Situação</label><select id="ms"><option>Em andamento</option><option>Concluído</option><option>Aguardando retorno</option></select>
+<p style="margin-top:1rem"><button class="primary" id="msv">Registrar</button></p></div>
+<div class="card"><h3>Registros</h3><div class="tbl"><table><tr><th>Data</th><th>Caso</th><th>Envolvidos</th><th>Combinado</th><th>Situação</th><th></th></tr>${S.mat.map(m=>`<tr><td>${esc(m.data)}</td><td>${esc(m.caso)}</td><td>${esc(m.eq.join(", "))}</td><td>${esc(m.enc)}</td><td>${esc(m.st)}</td><td><button class="danger noprint" data-dm="${m.id}">×</button></td></tr>`).join("")||`<tr><td colspan="6" class="empty">Sem registros ainda.</td></tr>`}</table></div></div>`;
 V.matricial.bind=()=>{
   $("#msv").onclick=()=>{const eq=$$(".eq:checked").map(x=>x.value);if(!eq.length&&!$("#me").value.trim())return toast("Preencha equipes ou combinado.");S.mat.unshift({id:uid(),data:$("#md").value,caso:$("#mc").value,eq,enc:$("#me").value,st:$("#ms").value});store.set("mat",S.mat);go("matricial")};
   $$("[data-dm]").forEach(x=>x.onclick=()=>{S.mat=S.mat.filter(m=>m.id!==x.dataset.dm);store.set("mat",S.mat);go("matricial")});
@@ -184,8 +190,10 @@ V.dados.bind=()=>{
 };
 
 /* ---------- roteamento ---------- */
-function go(v){view=v;if(map){map.remove();map=null}$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));$("#app").innerHTML=V[v]();V[v].bind&&V[v].bind();window.scrollTo(0,0);history.replaceState(null,"","#"+v)}
+function go(v){view=v;if(map){map.remove();map=null}$$("#nav button").forEach(b=>(b.classList.toggle("on",b.dataset.v===v),b.toggleAttribute("aria-current",b.dataset.v===v)));$("#app").innerHTML=V[v]();V[v].bind&&V[v].bind();window.scrollTo(0,0);history.replaceState(null,"","#"+v)}
 window.addToPTS=addToPTS;
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g&&g.dataset.go&&V[g.dataset.go])go(g.dataset.go)});
+window.addEventListener("hashchange",()=>{const v=location.hash.slice(1);if(V[v]&&v!==view&&D)go(v)});
 (async()=>{
   try{D=await (await fetch("data/dados.json")).json()}catch{$("#app").innerHTML=`<div class="warn">Não foi possível carregar os dados. Se abriu o arquivo direto do computador, publique no GitHub Pages ou rode um servidor local.</div>`;return}
   try{const c=await (await fetch("data/coords.json")).json();S.coords={...c,...S.coords}}catch{}

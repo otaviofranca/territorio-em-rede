@@ -3,24 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0e5a66">
 <title>Território em Rede</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' rx='10' fill='%230e5a66'/%3E%3Cpath d='M18 11 11 24M18 11l7 13M11 24h14' stroke='%23fff' stroke-width='2' stroke-linecap='round'/%3E%3Cg fill='%23fff'%3E%3Ccircle cx='18' cy='11' r='3.2'/%3E%3Ccircle cx='11' cy='24' r='3.2'/%3E%3Ccircle cx='25' cy='24' r='3.2'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <header>
-  <div class="brand"><strong>Território em Rede</strong><span>Apoio matricial e territorial · Teresina-PI · <em>protótipo</em></span></div>
-  <nav id="nav">
-    <button data-v="inicio" class="on">Início</button>
-    <button data-v="localizar">Localizar</button>
-    <button data-v="mapa">Mapa</button>
-    <button data-v="pts">PTS</button>
-    <button data-v="matricial">Apoio matricial</button>
-    <button data-v="dados">Dados</button>
-  </nav>
+  <div class="wrap bar">
+    <a class="brand" href="#inicio" aria-label="Território em Rede — início">
+      <svg class="logo" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="currentColor"/><path d="M18 11 11 24M18 11l7 13M11 24h14" stroke="#fff" stroke-width="2" stroke-linecap="round" fill="none"/><g fill="#fff"><circle cx="18" cy="11" r="3.2"/><circle cx="11" cy="24" r="3.2"/><circle cx="25" cy="24" r="3.2"/></g></svg>
+      <span class="bn"><strong>Território em Rede</strong><small>Apoio matricial e territorial · Teresina-PI<em>protótipo</em></small></span>
+    </a>
+    <nav id="nav" aria-label="Principal">
+      <button data-v="inicio" class="on">Início</button>
+      <button data-v="localizar">Localizar</button>
+      <button data-v="mapa">Mapa</button>
+      <button data-v="pts">PTS</button>
+      <button data-v="matricial">Apoio matricial</button>
+      <button data-v="dados">Dados</button>
+    </nav>
+  </div>
 </header>
 <main id="app"></main>
-<footer>Use somente dados fictícios de usuários. Os registros ficam apenas neste navegador (LGPD).</footer>
+<footer><div class="wrap">Use somente dados fictícios de usuários. Os registros ficam apenas neste navegador (LGPD).</div></footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="js/app.js"></script>
 </body>
