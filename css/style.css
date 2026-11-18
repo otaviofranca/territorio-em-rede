@@ -18,7 +18,7 @@ header{background:var(--surface);border-bottom:1px solid var(--line);position:st
 .brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--ink);flex-shrink:0}
 .logo{width:38px;height:38px;color:var(--brand);flex-shrink:0}
 .bn{display:flex;flex-direction:column;line-height:1.2}
-.bn strong{font-size:1.1rem;letter-spacing:-.01em}
+.bn strong{font-size:1rem;letter-spacing:-.01em;line-height:1.2}
 .bn small{font-size:.78rem;color:var(--muted)}
 .bn em{font-style:normal;font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;background:var(--brand-50);color:var(--brand-d);padding:.05rem .45rem;border-radius:999px;margin-left:.3rem}
 nav{display:flex;gap:.2rem;overflow-x:auto;scrollbar-width:none}
@@ -28,7 +28,9 @@ nav button:hover{background:var(--line-2);color:var(--ink)}
 nav button.on{background:var(--brand-50);color:var(--brand-d);font-weight:650}
 
 main{flex:1;width:100%;max-width:1080px;margin:0 auto;padding:1.5rem 1.25rem 2.5rem}
-footer{border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:.82rem;padding:1rem 0;text-align:center}
+footer{border-top:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:.8rem;padding:1rem 0;text-align:center}
+footer p{margin:.3rem auto;max-width:92ch}
+footer .ptt{text-align:justify;text-align-last:center;line-height:1.5}
 
 /* tipografia */
 h1,h2,h3{line-height:1.2;letter-spacing:-.015em}
@@ -43,7 +45,7 @@ p{margin:.5rem 0}
 .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 65%);pointer-events:none}
 .hero>*{position:relative;z-index:1}
 .eyebrow{display:inline-block;font-size:.76rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;opacity:.85}
-.hero h1{font-size:clamp(1.65rem,4.2vw,2.5rem);margin:.5rem 0 .8rem;max-width:20ch}
+.hero h1{font-size:clamp(1.6rem,4vw,2.4rem);margin:.5rem 0 .8rem;max-width:26ch}
 .lead{font-size:1.08rem;max-width:58ch;color:rgba(255,255,255,.9);margin:0 0 1.4rem}
 .cta{display:flex;gap:.7rem;flex-wrap:wrap}
 .hero .primary{background:#fff;color:var(--brand-d)}
@@ -162,10 +164,84 @@ td input{min-width:120px}
   .dev{flex-direction:column;gap:.5rem}
 }
 
+/* grupos de botões: lado a lado no computador, empilhados no celular */
+.row.btns{justify-content:flex-start}
+.row.btns>*{flex:0 0 auto}
+@media (max-width:720px){.row.btns>*{flex:1 1 100%;white-space:normal;text-align:center}}
+
+/* três campos de busca */
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:.4rem 1.4rem}
+.cols3>div>label:first-child{margin-top:0}
+.cols3 .inline input{min-width:0}
+
+/* textos do manual */
+.texto h2{font-size:1.35rem;margin:0 0 .4rem}
+.texto h3{margin:0 0 .4rem;font-size:1.15rem;color:var(--brand-d)}
+.texto p{max-width:78ch}
+.texto .ref{font-size:.85rem;color:var(--muted);margin-top:-.1rem}
+.texto-fig{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:1.4rem;align-items:start}
+.fig{margin:0}
+.fig figcaption{font-size:.85rem;font-weight:600;margin-bottom:.4rem}
+.fig img{width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-s);background:#fff}
+.fig .ref{margin:.4rem 0 0}
+
+/* UBS no resultado da localização */
+.ubs-i{margin:.2rem 0 .5rem}
+.ubs-i .muted{display:block}
+.ubs-o{margin:.3rem 0;font-size:.9rem}
+.fonte-ubs{display:block;margin-top:.5rem;font-size:.8rem}
+.ext{font-size:.85rem;white-space:nowrap}
+#ubsprox-res{margin-top:.6rem}
+
+/* aviso fixo (PTS e apoio matricial) */
+.aviso-fixo{margin-top:1.2rem;padding:.7rem 1rem;background:var(--warn-bg);border:1px solid var(--warn-bd);border-radius:var(--r-s);color:var(--warn-ink);font-size:.82rem;line-height:1.45}
+@media (min-width:900px){.aviso-fixo{position:sticky;bottom:.6rem;z-index:50;box-shadow:0 4px 16px rgba(15,40,50,.18)}}
+@media (max-width:900px){.texto-fig{grid-template-columns:1fr}}
+
+/* folha de impressão (só aparece ao imprimir) */
+#print-area{display:none}
+.f-folha{width:100%;border-collapse:collapse;color:#111;font-size:10pt;line-height:1.4}
+.f-folha>thead>tr>td,.f-folha>tbody>tr>td,.f-folha>tfoot>tr>td{padding:0;border:0}
+.f-marca{display:flex;align-items:center;gap:10px;padding-bottom:5px;margin-bottom:8px;border-bottom:3px solid #08404a}
+.f-marca strong{display:block;font-size:11pt;color:#08404a}
+.f-marca span{font-size:8.5pt;color:#444}
+.f-titulo{margin:6px 0 2px;text-align:center;font-size:13.5pt;text-transform:uppercase;letter-spacing:.02em;color:#111}
+.f-sub{margin:0 0 10px;text-align:center;font-size:9pt;color:#444}
+.f-sec{margin:0 0 9px;break-inside:avoid}
+.f-sec h2,.f-h2{margin:10px 0 4px;padding-bottom:2px;border-bottom:1px solid #8fb9bf;font-size:10.5pt;color:#08404a;break-after:avoid}
+.f-sec h2 small{font-weight:400;color:#444}
+.f-bloco h3{margin:0 0 4px;font-size:10pt;color:#08404a}
+.f-bloco{border:1px solid #bbb;padding:6px 8px;margin:6px 0}
+.f-meta{width:100%;border-collapse:collapse;margin:0 0 8px;font-size:9.5pt}
+.f-meta th,.f-meta td,.f-tab th,.f-tab td{border:1px solid #999;padding:4px 7px;text-align:left;vertical-align:top}
+.f-meta th{background:#e4f1f2;width:34%;color:#08404a}
+.f-tab{width:100%;border-collapse:collapse;font-size:9.5pt;margin:2px 0}
+.f-tab th{background:#e4f1f2;color:#08404a}
+.f-alta td{height:9mm}
+.f-txt{margin:2px 0 4px;text-align:justify}
+.f-vazio{margin:2px 0 4px;font-style:italic;color:#555}
+.f-rot{margin:5px 0 1px;font-weight:700;font-size:9.5pt}
+.f-ul{margin:2px 0 4px;padding-left:18px}
+.f-chk{margin:2px 0}
+.f-campo{display:flex;align-items:flex-end;gap:6px;margin:7px 0}
+.f-campo span{font-weight:700;font-size:9.5pt}
+.f-campo .f-l{flex:1}
+.f-curta{max-width:55mm}
+.f-l{height:7.5mm;border-bottom:1px solid #555}
+.f-assin{display:grid;grid-template-columns:1fr 1fr;gap:14mm;margin-top:14mm;break-inside:avoid}
+.f-assin div{border-top:1px solid #222;padding-top:3px;text-align:center;font-size:9pt}
+.f-rod{margin-top:8px;padding-top:3px;border-top:1px solid #888;font-size:7.5pt;color:#333;line-height:1.35}
+.f-rod p{margin:1px 0}
+.f-quebra{break-after:page}
+
 @media print{
-  header,footer,.noprint{display:none!important}
+  @page{size:A4;margin:12mm}
+  header,footer,.noprint,.aviso-fixo{display:none!important}
   body{background:#fff}
   main{padding:0}
   .card{border:0;box-shadow:none;padding:0}
   input,textarea{border:0;padding:0}
+  body.printing>*:not(#print-area){display:none!important}
+  body.printing #print-area{display:block}
+  .f-meta th,.f-tab th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
